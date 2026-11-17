@@ -1,0 +1,37 @@
+
+name: Gerar JAR
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RandomChaos do criador.zip'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar arquivos
+        uses: actions/checkout@v4
+
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Extrair ZIP
+        run: |
+          mkdir extraido
+          unzip "RandomChaos do criador.zip" -d extraido
+
+      - name: Gerar JAR
+        run: |
+          jar cf RandomChaos.jar -C extraido .
+
+      - name: Disponibilizar JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: RandomChaos-JAR
+          path: RandomChaos.jar
